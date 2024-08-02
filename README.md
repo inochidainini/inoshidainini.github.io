@@ -1,0 +1,1 @@
+# inoshidainini.github.io
