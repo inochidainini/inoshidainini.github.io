@@ -1,13 +1,133 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Progate</title>
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+<html lang="ja">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-やあ
+    <input type="file", id="file"><br>
+
+    <label for="name">カード名
+        <input type="text" name="" id="name" placeholder="最大10文字" onchange="load_status()">
+    </label><br>
+    
+
+    <input type="radio" name="element" id="e_null" onclick="change_color_null()" checked><label for="e_null"><font color = "#555555">なし</font></label>
+    <input type="radio" name="element" id="fire"   onclick="change_color_fire()"><label for="fire"><font color = "#ff6666">炎属性</font></label>
+    <input type="radio" name="element" id="water"  onclick="change_color_water()"><label for="water"><font color = "#6666ff">水属性</font></label>
+    <input type="radio" name="element" id="wood"   onclick="change_color_wood()"><label for="wood"><font color = "#ff9900">木属性</font></label>
+    <input type="radio" name="element" id="ground" onclick="change_color_ground()"><label for="ground"><font color = "#6688aa">土属性</font></label>
+    <input type="radio" name="element" id="light"  onclick="change_color_light()"><label for="light"><font color = "#c5c500">光属性</font></label>
+    <input type="radio" name="element" id="dark"   onclick="change_color_dark()"><label for="dark"><font color = "#aa55cc">闇属性</font></label><br>
+
+    <input type="number" id="money" placeholder="金額" onchange="load_status()">
+    <input type="number" id="mp_needed" placeholder="消費MP" onchange="load_status()"><br>
+
+    
+    <input type="radio" name="format" id="format1" onclick="change_format()" checked><label for="format1">1</label>
+    <input type="radio" name="format" id="format2" onclick="change_format()" ><label for="format2">2</label>
+    <input type="radio" name="format" id="format3" onclick="change_format()" ><label for="format3">3</label><br>
+
+
+    <div id="model1">
+        <label for="damageplus">+</label><input type="checkbox" id="damageplus" onchange="load_status()"><label for="damageplus"></label>
+        <input id="damage"  type="number" placeholder="攻撃力" oninput="validateNumberInput(this)" onchange="load_status()">
+        <input id="percent" type="number" placeholder="割合"   oninput="validateNumberInput(this)" onchange="load_status()"><br>
+
+        <input id="defence" type="number" placeholder="防御力" oninput="validateNumberInput(this)" onchange="load_status()">
+        <input id="hp"      type="number" placeholder="HP回復" oninput="validateNumberInput(this)" onchange="load_status()">
+        <input id="mp"      type="number" placeholder="MP回復" oninput="validateNumberInput(this)" onchange="load_status()"><br>
+
+        <input type="text" id="free_text1" placeholder="テキスト1" onchange="load_status()">
+        <input type="text" id="free_text2" placeholder="テキスト2" onchange="load_status()">
+        <input type="text" id="free_text3" placeholder="テキスト3" onchange="load_status()"><br>
+
+        <input type="checkbox" id="double_attack" onchange="load_status()"><label for="double_attack">二回攻撃する</label>
+        <input type="checkbox" id="deflect_normal" onchange="load_status()"><label for="deflect_normal">無属性武器を弾く</label>
+        <input type="checkbox" id="deflect_magic" onchange="load_status()"><label for="deflect_magic">奇跡を弾く</label>
+        <input type="checkbox" id="bounce_normal" onchange="load_status()"><label for="bounce_normal">無属性武器をはね返す</label>
+        <input type="checkbox" id="bounce_magic" onchange="load_status()"><label for="bounce_magic">奇跡をはね返す</label>
+        <input type="checkbox" id="stop_magic" onchange="load_status()"><label for="stop_magic">奇跡を止める</label>
+        <input type="checkbox" id="absorb_hp" onchange="load_status()"><label for="absorb_hp">HPを吸収する</label>
+        <input type="checkbox" id="damage_cold" onchange="load_status()"><label for="damage_cold">ダメージで風邪</label>
+        <input type="checkbox" id="damage_hell" onchange="load_status()"><label for="damage_hell">ダメージで地獄病</label>
+        <input type="checkbox" id="damage_fog" onchange="load_status()"><label for="damage_fog">ダメージで霧</label>
+        <input type="checkbox" id="damage_flash" onchange="load_status()"><label for="damage_flash">ダメージで閃光</label>
+        <input type="checkbox" id="damage_dream" onchange="load_status()"><label for="damage_dream">ダメージで夢</label>
+        <input type="checkbox" id="damage_darkcloud" onchange="load_status()"><label for="damage_darkcloud">ダメージで暗雲</label>
+        <input type="checkbox" id="dye_fire" onchange="load_status()"><label for="dye_fire">火属性に染める</label>
+        <input type="checkbox" id="dye_water" onchange="load_status()"><label for="dye_water">水属性に染める</label>
+        <input type="checkbox" id="damage_user" onchange="load_status()"><label for="damage_user">使用者に同じダメージ</label>
+        <input type="checkbox" id="free_magic" onchange="load_status()"><label for="free_magic">消費なしで奇跡を起こす</label>
+        <input type="checkbox" id="all_mp" onchange="load_status()"><label for="all_mp">MPを全て消費する</label>
+        <input type="checkbox" id="damage_someone" onchange="load_status()"><label for="damage_someone">誰かに攻撃する</label>
+        <input type="checkbox" id="reset_artifact" onchange="load_status()"><label for="reset_artifact">使用者に夢と神器一新</label>
+        <input type="checkbox" id="user_fever" onchange="load_status()"><label for="user_fever">使用者に熱病</label>
+        <input type="checkbox" id="" onchange="load_status()"><label for=""></label>
+        <input type="checkbox" id="" onchange="load_status()"><label for=""></label>
+        <input type="checkbox" id="" onchange="load_status()"><label for=""></label><br>
+
+        <input type="checkbox" id="double_layer" onchange="layer_flag()"><label for="double_layer">2段化</label><br>
+    </div>
+
+    <div id="model2" class="hidden">
+        <input type="text" id="free_text11" placeholder="テキスト1" onchange="load_status()"><br>
+        <input type="text" id="free_text12" placeholder="テキスト2" onchange="load_status()"><br>
+    </div>
+
+    <div id="model3" class="hidden">
+        <input type="text" id="free_text21" placeholder="テキスト1" onchange="load_status()"><br>
+        <input type="text" id="free_text22" placeholder="テキスト2" onchange="load_status()"><br>
+        <input type="text" id="free_text23" placeholder="テキスト3" onchange="load_status()"><br>
+        <input type="text" id="free_text24" placeholder="テキスト4" onchange="load_status()"><br>
+    </div>
+
+    <button onclick="keepcvs1()">保存1</button>
+    <button onclick="keepcvs2()">保存2</button>
+    <button onclick="keepcvs3()">保存3</button>
+    <button onclick="keepcvs4()">保存4</button>
+    <button onclick="keepcvs5()">保存5</button>
+    <button onclick="keepcvs6()">保存6</button>
+    <button onclick="keepcvs7()">保存7</button>
+    <button onclick="keepcvs8()">保存8</button>
+
+    <!--<input type="radio" name="cvs" id="cvs1" onclick="load_status()" checked><label for="cvs1">1</label>
+    <input type="radio" name="cvs" id="cvs2" onclick="load_status()"><label for="cvs2">2</label>
+    <input type="radio" name="cvs" id="cvs3" onclick="load_status()"><label for="cvs3">3</label>
+    <input type="radio" name="cvs" id="cvs4" onclick="load_status()"><label for="cvs4">4</label>
+    <input type="radio" name="cvs" id="cvs5" onclick="load_status()"><label for="cvs5">5</label>
+    <input type="radio" name="cvs" id="cvs6" onclick="load_status()"><label for="cvs6">6</label>
+    <input type="radio" name="cvs" id="cvs7" onclick="load_status()"><label for="cvs7">7</label>
+    <input type="radio" name="cvs" id="cvs8" onclick="load_status()"><label for="cvs8">8</label>-->
+
+    <canvas name="out1" id='out'></canvas>
+    <!--<canvas name="out2"></canvas>
+    <canvas name="out3"></canvas>
+    <canvas name="out4"></canvas>
+    <canvas name="out5"></canvas>
+    <canvas name="out6"></canvas>
+    <canvas name="out7"></canvas>
+    <canvas name="out8"></canvas>-->
+
+    <br><input id='scal' type='range' value='' min='10' max='400' oninput="scaling(value)" style='width: 300px;'><br>
+    <canvas id='cvs' width='300' height='300'></canvas>
+    <canvas id="examplecvs" width="330" height="300"></canvas><br>
+    <button onclick='crop_img()'>CROP</button><br>
+
+    
+
+    <button onclick="generatepdf()">生成</button>
+
+
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
