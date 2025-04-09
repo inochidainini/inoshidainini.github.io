@@ -165,6 +165,7 @@ const c_light = "#c5c500"
 const c_dark ="#aa55cc"
 var text_color = "#555555"
 
+const counts = [0,0,0,0,0,0,0,0]
 
 var keepedcvs1 = out.toDataURL("image/png")
 var keepedcvs2 = out.toDataURL("image/png")
@@ -229,7 +230,13 @@ function name_load(){
     ctx.font = 'bold 60px "Noto Sans JP"'
     ctx.textBaseline = 'middle'
     ctx.textAlign = 'start'
-    ctx.fillText(name_text, 10*times+square+5*times, 5*times+15*times)
+    var starttextline = 0
+    if(document.querySelector("#nameleft").checked){
+        starttextline = -2*times
+    }else{
+        starttextline = 0
+    }
+    ctx.fillText(name_text, 10*times+square+5*times+starttextline, 5*times+15*times)
 }
 
 //属性画像
@@ -675,61 +682,378 @@ async function generatepdf(){
     pdf.save("gfgenerater")
 }
 
+//警告ダイアログ表示
+
+
+
 //canvas保存
 function keepcvs1(){
-    keepedcvs1 = out.toDataURL("image/png")
-    const keepedImage = new Image()
-    keepedImage.src = keepedcvs1
-    const ctx = document.querySelector("#examplecvs").getContext("2d")
-    ctx.drawImage(keepedImage, 10, 10, 150, 45)
+    counts[0] += 1
+    if(counts[0]>2){
+        const oldimg = document.createElement("img")
+        const newimg = document.createElement("img")
+        oldimg.src = keepedcvs1
+        oldimg.alt = "oldpreview"
+        document.querySelector("#dialog_p").appendChild(oldimg)
+        document.querySelector("#dialog_p").appendChild(newimg)
+
+        const dialog = document.querySelector("#warning")
+        const confirm_func= () => {
+            counts[0] = 1
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            keepcvs1()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
+        }
+
+        const cancel_func = () => {
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            document.querySelector("#cancel").removeEventListener("click", cancel_func)
+        }
+
+        document.querySelector("#confirm").addEventListener("click", confirm_func)
+        document.querySelector("#cancel").addEventListener("click", cancel_func)
+
+        newimg.alt = "newpreview"
+        newimg.onload = () =>{
+            dialog.show()
+        }
+        newimg.src = out.toDataURL("image/png")
+
+    }else{
+        keepedcvs1 = out.toDataURL("image/png")
+        const keepedImage = new Image()
+        keepedImage.onload = (e) =>{
+            const ctx = document.querySelector("#examplecvs").getContext("2d")
+            ctx.drawImage(keepedImage, 10, 10, 150, 45)
+        }
+        keepedImage.src = keepedcvs1
+    }
 }
 function keepcvs2(){
-    keepedcvs2 = out.toDataURL("image/png")
-    const keepedImage = new Image()
-    keepedImage.src = keepedcvs2
-    const ctx = document.querySelector("#examplecvs").getContext("2d")
-    ctx.drawImage(keepedImage, 170, 10, 150, 45)
+    counts[1] += 1
+    if(counts[1]>2){
+        const oldimg = document.createElement("img")
+        const newimg = document.createElement("img")
+        oldimg.src = keepedcvs2
+        oldimg.alt = "oldpreview"
+        document.querySelector("#dialog_p").appendChild(oldimg)
+        document.querySelector("#dialog_p").appendChild(newimg)
+
+        const dialog = document.querySelector("#warning")
+        const confirm_func= () => {
+            counts[1] = 1
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            keepcvs2()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
+        }
+
+        const cancel_func = () => {
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            document.querySelector("#cancel").removeEventListener("click", cancel_func)
+        }
+
+        document.querySelector("#confirm").addEventListener("click", confirm_func)
+        document.querySelector("#cancel").addEventListener("click", cancel_func)
+
+        newimg.alt = "newpreview"
+        newimg.onload = () =>{
+            dialog.show()
+        }
+        newimg.src = out.toDataURL("image/png")
+
+    }else{
+        keepedcvs2 = out.toDataURL("image/png")
+        const keepedImage = new Image()
+        keepedImage.onload = (e) =>{
+            const ctx = document.querySelector("#examplecvs").getContext("2d")
+            ctx.drawImage(keepedImage, 170, 10, 150, 45)
+        }
+        keepedImage.src = keepedcvs2
+    }
 }
 function keepcvs3(){
-    keepedcvs3 = out.toDataURL("image/png")
-    const keepedImage = new Image()
-    keepedImage.src = keepedcvs3
-    const ctx = document.querySelector("#examplecvs").getContext("2d")
-    ctx.drawImage(keepedImage, 10, 65, 150, 45)
+    counts[2] += 1
+    if(counts[2]>2){
+        const oldimg = document.createElement("img")
+        const newimg = document.createElement("img")
+        oldimg.src = keepedcvs3
+        oldimg.alt = "oldpreview"
+        document.querySelector("#dialog_p").appendChild(oldimg)
+        document.querySelector("#dialog_p").appendChild(newimg)
+
+        const dialog = document.querySelector("#warning")
+        const confirm_func= () => {
+            counts[2] = 1
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            keepcvs3()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
+        }
+
+        const cancel_func = () => {
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            document.querySelector("#cancel").removeEventListener("click", cancel_func)
+        }
+
+        document.querySelector("#confirm").addEventListener("click", confirm_func)
+        document.querySelector("#cancel").addEventListener("click", cancel_func)
+
+        newimg.alt = "newpreview"
+        newimg.onload = () =>{
+            dialog.show()
+        }
+        newimg.src = out.toDataURL("image/png")
+
+    }else{
+        keepedcvs3 = out.toDataURL("image/png")
+        const keepedImage = new Image()
+        keepedImage.onload = (e) =>{
+            const ctx = document.querySelector("#examplecvs").getContext("2d")
+            ctx.drawImage(keepedImage, 10, 65, 150, 45)
+        }
+        keepedImage.src = keepedcvs3
+    }
 }
 function keepcvs4(){
-    keepedcvs4 = out.toDataURL("image/png")
-    const keepedImage = new Image()
-    keepedImage.src = keepedcvs4
-    const ctx = document.querySelector("#examplecvs").getContext("2d")
-    ctx.drawImage(keepedImage, 170, 65, 150, 45)
+    counts[3] += 1
+    if(counts[3]>2){
+        const oldimg = document.createElement("img")
+        const newimg = document.createElement("img")
+        oldimg.src = keepedcvs4
+        oldimg.alt = "oldpreview"
+        document.querySelector("#dialog_p").appendChild(oldimg)
+        document.querySelector("#dialog_p").appendChild(newimg)
+
+        const dialog = document.querySelector("#warning")
+        const confirm_func= () => {
+            counts[3] = 1
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            keepcvs4()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
+        }
+
+        const cancel_func = () => {
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            document.querySelector("#cancel").removeEventListener("click", cancel_func)
+        }
+
+        document.querySelector("#confirm").addEventListener("click", confirm_func)
+        document.querySelector("#cancel").addEventListener("click", cancel_func)
+
+        newimg.alt = "newpreview"
+        newimg.onload = () =>{
+            dialog.show()
+        }
+        newimg.src = out.toDataURL("image/png")
+
+    }else{
+        keepedcvs4 = out.toDataURL("image/png")
+        const keepedImage = new Image()
+        keepedImage.onload = (e) =>{
+            const ctx = document.querySelector("#examplecvs").getContext("2d")
+            ctx.drawImage(keepedImage, 170, 65, 150, 45)
+        }
+        keepedImage.src = keepedcvs4
+    }
 }
 function keepcvs5(){
-    keepedcvs5 = out.toDataURL("image/png")
-    const keepedImage = new Image()
-    keepedImage.src = keepedcvs5
-    const ctx = document.querySelector("#examplecvs").getContext("2d")
-    ctx.drawImage(keepedImage, 10, 120, 150, 45)
+    counts[4] += 1
+    if(counts[4]>2){
+        const oldimg = document.createElement("img")
+        const newimg = document.createElement("img")
+        oldimg.src = keepedcvs5
+        oldimg.alt = "oldpreview"
+        document.querySelector("#dialog_p").appendChild(oldimg)
+        document.querySelector("#dialog_p").appendChild(newimg)
+
+        const dialog = document.querySelector("#warning")
+        const confirm_func= () => {
+            counts[4] = 1
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            keepcvs5()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
+        }
+
+        const cancel_func = () => {
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            document.querySelector("#cancel").removeEventListener("click", cancel_func)
+        }
+
+        document.querySelector("#confirm").addEventListener("click", confirm_func)
+        document.querySelector("#cancel").addEventListener("click", cancel_func)
+
+        newimg.alt = "newpreview"
+        newimg.onload = () =>{
+            dialog.show()
+        }
+        newimg.src = out.toDataURL("image/png")
+
+    }else{
+        keepedcvs5 = out.toDataURL("image/png")
+        const keepedImage = new Image()
+        keepedImage.onload = (e) =>{
+            const ctx = document.querySelector("#examplecvs").getContext("2d")
+            ctx.drawImage(keepedImage, 10, 120, 150, 45)
+        }
+        keepedImage.src = keepedcvs5
+    }
 }
 function keepcvs6(){
-    keepedcvs6 = out.toDataURL("image/png")
-    const keepedImage = new Image()
-    keepedImage.src = keepedcvs6
-    const ctx = document.querySelector("#examplecvs").getContext("2d")
-    ctx.drawImage(keepedImage, 170, 120, 150, 45)
-}function keepcvs7(){
-    keepedcvs7 = out.toDataURL("image/png")
-    const keepedImage = new Image()
-    keepedImage.src = keepedcvs7
-    const ctx = document.querySelector("#examplecvs").getContext("2d")
-    ctx.drawImage(keepedImage, 10, 175, 150, 45)
+    counts[5] += 1
+    if(counts[5]>2){
+        const oldimg = document.createElement("img")
+        const newimg = document.createElement("img")
+        oldimg.src = keepedcvs6
+        oldimg.alt = "oldpreview"
+        document.querySelector("#dialog_p").appendChild(oldimg)
+        document.querySelector("#dialog_p").appendChild(newimg)
+
+        const dialog = document.querySelector("#warning")
+        const confirm_func= () => {
+            counts[5] = 1
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            keepcvs6()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
+        }
+
+        const cancel_func = () => {
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            document.querySelector("#cancel").removeEventListener("click", cancel_func)
+        }
+
+        document.querySelector("#confirm").addEventListener("click", confirm_func)
+        document.querySelector("#cancel").addEventListener("click", cancel_func)
+
+        newimg.alt = "newpreview"
+        newimg.onload = () =>{
+            dialog.show()
+        }
+        newimg.src = out.toDataURL("image/png")
+
+    }else{
+        keepedcvs6 = out.toDataURL("image/png")
+        const keepedImage = new Image()
+        keepedImage.onload = (e) =>{
+            const ctx = document.querySelector("#examplecvs").getContext("2d")
+            ctx.drawImage(keepedImage, 170, 120, 150, 45)
+        }
+        keepedImage.src = keepedcvs6
+    }
+}
+function keepcvs7(){
+    counts[6] += 1
+    if(counts[6]>2){
+        const oldimg = document.createElement("img")
+        const newimg = document.createElement("img")
+        oldimg.src = keepedcvs7
+        oldimg.alt = "oldpreview"
+        document.querySelector("#dialog_p").appendChild(oldimg)
+        document.querySelector("#dialog_p").appendChild(newimg)
+
+        const dialog = document.querySelector("#warning")
+        const confirm_func= () => {
+            counts[6] = 1
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            keepcvs7()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
+        }
+
+        const cancel_func = () => {
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            document.querySelector("#cancel").removeEventListener("click", cancel_func)
+        }
+
+        document.querySelector("#confirm").addEventListener("click", confirm_func)
+        document.querySelector("#cancel").addEventListener("click", cancel_func)
+
+        newimg.alt = "newpreview"
+        newimg.onload = () =>{
+            dialog.show()
+        }
+        newimg.src = out.toDataURL("image/png")
+
+    }else{
+        keepedcvs7 = out.toDataURL("image/png")
+        const keepedImage = new Image()
+        keepedImage.onload = (e) =>{
+            const ctx = document.querySelector("#examplecvs").getContext("2d")
+            ctx.drawImage(keepedImage, 10, 175, 150, 45)
+        }
+        keepedImage.src = keepedcvs7
+    }
 }
 function keepcvs8(){
-    keepedcvs8 = out.toDataURL("image/png")
-    const keepedImage = new Image()
-    keepedImage.src = keepedcvs8
-    const ctx = document.querySelector("#examplecvs").getContext("2d")
-    ctx.drawImage(keepedImage, 170, 175, 150, 45)
+    counts[7] += 1
+    if(counts[7]>2){
+        const oldimg = document.createElement("img")
+        const newimg = document.createElement("img")
+        oldimg.src = keepedcvs8
+        oldimg.alt = "oldpreview"
+        document.querySelector("#dialog_p").appendChild(oldimg)
+        document.querySelector("#dialog_p").appendChild(newimg)
+
+        const dialog = document.querySelector("#warning")
+        const confirm_func= () => {
+            counts[7] = 1
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            keepcvs8()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
+        }
+
+        const cancel_func = () => {
+            oldimg.remove()
+            newimg.remove()
+            dialog.close()
+            document.querySelector("#cancel").removeEventListener("click", cancel_func)
+        }
+
+        document.querySelector("#confirm").addEventListener("click", confirm_func)
+        document.querySelector("#cancel").addEventListener("click", cancel_func)
+
+        newimg.alt = "newpreview"
+        newimg.onload = () =>{
+            dialog.show()
+        }
+        newimg.src = out.toDataURL("image/png")
+
+    }else{
+        keepedcvs8 = out.toDataURL("image/png")
+        const keepedImage = new Image()
+        keepedImage.onload = (e) =>{
+            const ctx = document.querySelector("#examplecvs").getContext("2d")
+            ctx.drawImage(keepedImage, 170, 175, 150, 45)
+        }
+        keepedImage.src = keepedcvs8
+    }
 }
 
 keepcvs1()
