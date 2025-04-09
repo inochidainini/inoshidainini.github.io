@@ -17,7 +17,8 @@
 
     <label for="name">カード名
         <input type="text" name="" id="name" placeholder="最大10文字" onchange="load_status()">
-    </label><br>
+    </label>
+    <input type="checkbox" id="nameleft" onchange="load_status()"><label for="nameleft">左寄せ</label><br>
     
 
     <input type="radio" name="element" id="e_null" onclick="change_color_null()" checked><label for="e_null"><font color = "#555555">なし</font></label>
@@ -122,10 +123,16 @@
     <canvas id="examplecvs" width="330" height="300"></canvas><br>
     <button onclick='crop_img()'>CROP</button><br>
 
-    
 
     <button onclick="generatepdf()">生成</button>
 
+
+    <dialog id="warning">
+        <p id="dialog_p">以下の画像に変更します</p>
+
+        <button id="confirm">confirm</button>
+        <button id="cancel">cancel</button>
+    </dialog>
 
     <script src="script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
