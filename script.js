@@ -331,8 +331,8 @@ function sub_text2(text){
     ctx.font = '30px "Noto Sans JP"'
     ctx.textBaseline = 'middle'
     ctx.textAlign = 'start'
-    ctx.fillText(stext, 10*times+square+3*times, 38*times+6*times+24*times)
-    ctx.fillText(text, 10*times+square+3*times, 38*times+6*times+24*times+11*times)
+    ctx.fillText(stext, 10*times+square+3*times, 38*times+6*times+23*times)
+    ctx.fillText(text, 10*times+square+3*times, 38*times+6*times+23*times+11*times)
 }
 
 //サブテキストリセット
