@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
@@ -9,6 +10,17 @@
     <style>
         .hidden {
             display: none;
+        }
+
+        dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        dialog::backdrop {
+            background-color:rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
@@ -100,23 +112,8 @@
     <button onclick="keepcvs7()">保存7</button>
     <button onclick="keepcvs8()">保存8</button>
 
-    <!--<input type="radio" name="cvs" id="cvs1" onclick="load_status()" checked><label for="cvs1">1</label>
-    <input type="radio" name="cvs" id="cvs2" onclick="load_status()"><label for="cvs2">2</label>
-    <input type="radio" name="cvs" id="cvs3" onclick="load_status()"><label for="cvs3">3</label>
-    <input type="radio" name="cvs" id="cvs4" onclick="load_status()"><label for="cvs4">4</label>
-    <input type="radio" name="cvs" id="cvs5" onclick="load_status()"><label for="cvs5">5</label>
-    <input type="radio" name="cvs" id="cvs6" onclick="load_status()"><label for="cvs6">6</label>
-    <input type="radio" name="cvs" id="cvs7" onclick="load_status()"><label for="cvs7">7</label>
-    <input type="radio" name="cvs" id="cvs8" onclick="load_status()"><label for="cvs8">8</label>-->
 
     <canvas name="out1" id='out'></canvas>
-    <!--<canvas name="out2"></canvas>
-    <canvas name="out3"></canvas>
-    <canvas name="out4"></canvas>
-    <canvas name="out5"></canvas>
-    <canvas name="out6"></canvas>
-    <canvas name="out7"></canvas>
-    <canvas name="out8"></canvas>-->
 
     <br><input id='scal' type='range' value='' min='10' max='400' oninput="scaling(value)" style='width: 300px;'><br>
     <canvas id='cvs' width='300' height='300'></canvas>
@@ -130,7 +127,7 @@
     <dialog id="warning">
         <p>以下の画像に変更します</p><br>
         <span id="dialog_p"></span>
-
+        <br><br><span id="dialog_q"></span>
         <br><button id="confirm">confirm</button>
         <button id="cancel">cancel</button>
     </dialog>
