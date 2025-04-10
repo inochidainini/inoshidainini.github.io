@@ -692,34 +692,41 @@ function keepcvs1(){
     if(counts[0]>2){
         const oldimg = document.createElement("img")
         const newimg = document.createElement("img")
+        oldimg.width = out.width/3
+        oldimg.height = out.height/3
+        newimg.width = out.width/3
+        newimg.height = out.height/3
         oldimg.src = keepedcvs1
         oldimg.alt = "oldpreview"
         document.querySelector("#dialog_p").appendChild(oldimg)
-        document.querySelector("#dialog_p").appendChild(newimg)
+        document.querySelector("#dialog_q").appendChild(newimg)
 
         const dialog = document.querySelector("#warning")
         const confirm_func= () => {
             counts[0] = 1
-            oldimg.remove()
-            newimg.remove()
             dialog.close()
             keepcvs1()
-            document.querySelector("#confirm").removeEventListener("click", confirm_func)
         }
 
         const cancel_func = () => {
+            dialog.close()
+        }
+
+        const close_func = () => {
             oldimg.remove()
             newimg.remove()
-            dialog.close()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
             document.querySelector("#cancel").removeEventListener("click", cancel_func)
+            dialog.removeEventListener("close", close_func)
         }
 
         document.querySelector("#confirm").addEventListener("click", confirm_func)
         document.querySelector("#cancel").addEventListener("click", cancel_func)
+        dialog.addEventListener("close", close_func)
 
         newimg.alt = "newpreview"
         newimg.onload = () =>{
-            dialog.show()
+            dialog.showModal()
         }
         newimg.src = out.toDataURL("image/png")
 
@@ -738,34 +745,41 @@ function keepcvs2(){
     if(counts[1]>2){
         const oldimg = document.createElement("img")
         const newimg = document.createElement("img")
+        oldimg.width = out.width/3
+        oldimg.height = out.height/3
+        newimg.width = out.width/3
+        newimg.height = out.height/3
         oldimg.src = keepedcvs2
         oldimg.alt = "oldpreview"
         document.querySelector("#dialog_p").appendChild(oldimg)
-        document.querySelector("#dialog_p").appendChild(newimg)
+        document.querySelector("#dialog_q").appendChild(newimg)
 
         const dialog = document.querySelector("#warning")
         const confirm_func= () => {
             counts[1] = 1
-            oldimg.remove()
-            newimg.remove()
             dialog.close()
             keepcvs2()
-            document.querySelector("#confirm").removeEventListener("click", confirm_func)
         }
 
         const cancel_func = () => {
+            dialog.close()
+        }
+
+        const close_func = () => {
             oldimg.remove()
             newimg.remove()
-            dialog.close()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
             document.querySelector("#cancel").removeEventListener("click", cancel_func)
+            dialog.removeEventListener("close", close_func)
         }
 
         document.querySelector("#confirm").addEventListener("click", confirm_func)
         document.querySelector("#cancel").addEventListener("click", cancel_func)
+        dialog.addEventListener("close", close_func)
 
         newimg.alt = "newpreview"
         newimg.onload = () =>{
-            dialog.show()
+            dialog.showModal()
         }
         newimg.src = out.toDataURL("image/png")
 
@@ -784,34 +798,41 @@ function keepcvs3(){
     if(counts[2]>2){
         const oldimg = document.createElement("img")
         const newimg = document.createElement("img")
+        oldimg.width = out.width/3
+        oldimg.height = out.height/3
+        newimg.width = out.width/3
+        newimg.height = out.height/3
         oldimg.src = keepedcvs3
         oldimg.alt = "oldpreview"
         document.querySelector("#dialog_p").appendChild(oldimg)
-        document.querySelector("#dialog_p").appendChild(newimg)
+        document.querySelector("#dialog_q").appendChild(newimg)
 
         const dialog = document.querySelector("#warning")
         const confirm_func= () => {
             counts[2] = 1
-            oldimg.remove()
-            newimg.remove()
             dialog.close()
             keepcvs3()
-            document.querySelector("#confirm").removeEventListener("click", confirm_func)
         }
 
         const cancel_func = () => {
+            dialog.close()
+        }
+
+        const close_func = () => {
             oldimg.remove()
             newimg.remove()
-            dialog.close()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
             document.querySelector("#cancel").removeEventListener("click", cancel_func)
+            dialog.removeEventListener("close", close_func)
         }
 
         document.querySelector("#confirm").addEventListener("click", confirm_func)
         document.querySelector("#cancel").addEventListener("click", cancel_func)
+        dialog.addEventListener("close", close_func)
 
         newimg.alt = "newpreview"
         newimg.onload = () =>{
-            dialog.show()
+            dialog.showModal()
         }
         newimg.src = out.toDataURL("image/png")
 
@@ -830,34 +851,41 @@ function keepcvs4(){
     if(counts[3]>2){
         const oldimg = document.createElement("img")
         const newimg = document.createElement("img")
+        oldimg.width = out.width/3
+        oldimg.height = out.height/3
+        newimg.width = out.width/3
+        newimg.height = out.height/3
         oldimg.src = keepedcvs4
         oldimg.alt = "oldpreview"
         document.querySelector("#dialog_p").appendChild(oldimg)
-        document.querySelector("#dialog_p").appendChild(newimg)
+        document.querySelector("#dialog_q").appendChild(newimg)
 
         const dialog = document.querySelector("#warning")
         const confirm_func= () => {
             counts[3] = 1
-            oldimg.remove()
-            newimg.remove()
             dialog.close()
             keepcvs4()
-            document.querySelector("#confirm").removeEventListener("click", confirm_func)
         }
 
         const cancel_func = () => {
+            dialog.close()
+        }
+
+        const close_func = () => {
             oldimg.remove()
             newimg.remove()
-            dialog.close()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
             document.querySelector("#cancel").removeEventListener("click", cancel_func)
+            dialog.removeEventListener("close", close_func)
         }
 
         document.querySelector("#confirm").addEventListener("click", confirm_func)
         document.querySelector("#cancel").addEventListener("click", cancel_func)
+        dialog.addEventListener("close", close_func)
 
         newimg.alt = "newpreview"
         newimg.onload = () =>{
-            dialog.show()
+            dialog.showModal()
         }
         newimg.src = out.toDataURL("image/png")
 
@@ -876,34 +904,41 @@ function keepcvs5(){
     if(counts[4]>2){
         const oldimg = document.createElement("img")
         const newimg = document.createElement("img")
+        oldimg.width = out.width/3
+        oldimg.height = out.height/3
+        newimg.width = out.width/3
+        newimg.height = out.height/3
         oldimg.src = keepedcvs5
         oldimg.alt = "oldpreview"
         document.querySelector("#dialog_p").appendChild(oldimg)
-        document.querySelector("#dialog_p").appendChild(newimg)
+        document.querySelector("#dialog_q").appendChild(newimg)
 
         const dialog = document.querySelector("#warning")
         const confirm_func= () => {
             counts[4] = 1
-            oldimg.remove()
-            newimg.remove()
             dialog.close()
             keepcvs5()
-            document.querySelector("#confirm").removeEventListener("click", confirm_func)
         }
 
         const cancel_func = () => {
+            dialog.close()
+        }
+
+        const close_func = () => {
             oldimg.remove()
             newimg.remove()
-            dialog.close()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
             document.querySelector("#cancel").removeEventListener("click", cancel_func)
+            dialog.removeEventListener("close", close_func)
         }
 
         document.querySelector("#confirm").addEventListener("click", confirm_func)
         document.querySelector("#cancel").addEventListener("click", cancel_func)
+        dialog.addEventListener("close", close_func)
 
         newimg.alt = "newpreview"
         newimg.onload = () =>{
-            dialog.show()
+            dialog.showModal()
         }
         newimg.src = out.toDataURL("image/png")
 
@@ -922,34 +957,41 @@ function keepcvs6(){
     if(counts[5]>2){
         const oldimg = document.createElement("img")
         const newimg = document.createElement("img")
+        oldimg.width = out.width/3
+        oldimg.height = out.height/3
+        newimg.width = out.width/3
+        newimg.height = out.height/3
         oldimg.src = keepedcvs6
         oldimg.alt = "oldpreview"
         document.querySelector("#dialog_p").appendChild(oldimg)
-        document.querySelector("#dialog_p").appendChild(newimg)
+        document.querySelector("#dialog_q").appendChild(newimg)
 
         const dialog = document.querySelector("#warning")
         const confirm_func= () => {
             counts[5] = 1
-            oldimg.remove()
-            newimg.remove()
             dialog.close()
             keepcvs6()
-            document.querySelector("#confirm").removeEventListener("click", confirm_func)
         }
 
         const cancel_func = () => {
+            dialog.close()
+        }
+
+        const close_func = () => {
             oldimg.remove()
             newimg.remove()
-            dialog.close()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
             document.querySelector("#cancel").removeEventListener("click", cancel_func)
+            dialog.removeEventListener("close", close_func)
         }
 
         document.querySelector("#confirm").addEventListener("click", confirm_func)
         document.querySelector("#cancel").addEventListener("click", cancel_func)
+        dialog.addEventListener("close", close_func)
 
         newimg.alt = "newpreview"
         newimg.onload = () =>{
-            dialog.show()
+            dialog.showModal()
         }
         newimg.src = out.toDataURL("image/png")
 
@@ -968,34 +1010,41 @@ function keepcvs7(){
     if(counts[6]>2){
         const oldimg = document.createElement("img")
         const newimg = document.createElement("img")
+        oldimg.width = out.width/3
+        oldimg.height = out.height/3
+        newimg.width = out.width/3
+        newimg.height = out.height/3
         oldimg.src = keepedcvs7
         oldimg.alt = "oldpreview"
         document.querySelector("#dialog_p").appendChild(oldimg)
-        document.querySelector("#dialog_p").appendChild(newimg)
+        document.querySelector("#dialog_q").appendChild(newimg)
 
         const dialog = document.querySelector("#warning")
         const confirm_func= () => {
             counts[6] = 1
-            oldimg.remove()
-            newimg.remove()
             dialog.close()
             keepcvs7()
-            document.querySelector("#confirm").removeEventListener("click", confirm_func)
         }
 
         const cancel_func = () => {
+            dialog.close()
+        }
+
+        const close_func = () => {
             oldimg.remove()
             newimg.remove()
-            dialog.close()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
             document.querySelector("#cancel").removeEventListener("click", cancel_func)
+            dialog.removeEventListener("close", close_func)
         }
 
         document.querySelector("#confirm").addEventListener("click", confirm_func)
         document.querySelector("#cancel").addEventListener("click", cancel_func)
+        dialog.addEventListener("close", close_func)
 
         newimg.alt = "newpreview"
         newimg.onload = () =>{
-            dialog.show()
+            dialog.showModal()
         }
         newimg.src = out.toDataURL("image/png")
 
@@ -1014,34 +1063,41 @@ function keepcvs8(){
     if(counts[7]>2){
         const oldimg = document.createElement("img")
         const newimg = document.createElement("img")
+        oldimg.width = out.width/3
+        oldimg.height = out.height/3
+        newimg.width = out.width/3
+        newimg.height = out.height/3
         oldimg.src = keepedcvs8
         oldimg.alt = "oldpreview"
         document.querySelector("#dialog_p").appendChild(oldimg)
-        document.querySelector("#dialog_p").appendChild(newimg)
+        document.querySelector("#dialog_q").appendChild(newimg)
 
         const dialog = document.querySelector("#warning")
         const confirm_func= () => {
             counts[7] = 1
-            oldimg.remove()
-            newimg.remove()
             dialog.close()
             keepcvs8()
-            document.querySelector("#confirm").removeEventListener("click", confirm_func)
         }
 
         const cancel_func = () => {
+            dialog.close()
+        }
+
+        const close_func = () => {
             oldimg.remove()
             newimg.remove()
-            dialog.close()
+            document.querySelector("#confirm").removeEventListener("click", confirm_func)
             document.querySelector("#cancel").removeEventListener("click", cancel_func)
+            dialog.removeEventListener("close", close_func)
         }
 
         document.querySelector("#confirm").addEventListener("click", confirm_func)
         document.querySelector("#cancel").addEventListener("click", cancel_func)
+        dialog.addEventListener("close", close_func)
 
         newimg.alt = "newpreview"
         newimg.onload = () =>{
-            dialog.show()
+            dialog.showModal()
         }
         newimg.src = out.toDataURL("image/png")
 
