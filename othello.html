@@ -168,7 +168,7 @@ function alphabetaEval(rootPlayer, heuristic, depth, gameBoard, currentPlayer, a
 
 function strategy_for_win_div(board, player, lis, maxDepthOverride=0){
   const pieces = countPieces(board, player) + countPieces(board, opponent(player));
-  const depth = (maxDepthOverride>0) ? maxDepthOverride : (pieces <= 50 ? 7 : 64 - pieces);
+  const depth = (maxDepthOverride>0) ? maxDepthOverride : (pieces <= 50 ? 6 : 64 - pieces);
   const moves = validMoves(board, player);
   if(moves.length===0) return null;
   let alpha = -1e12, beta=1e12, best=null;
