@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Othello — Play vs Linear‑Eval AI</title>
+  <style>
+    body{font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;display:flex;gap:24px;padding:18px}
+    .board{display:grid;grid-template-columns:repeat(8,44px);grid-template-rows:repeat(8,44px);gap:4px;background:#0b6623;padding:8px;border-radius:8px}
+    .cell{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,0.03);cursor:pointer}
+    .cell:hover{outline:2px solid rgba(255,255,255,0.06)}
+    .disc{width:34px;height:34px;border-radius:50%}
+    .disc.black{background:#111}
+    .disc.white{background:#eee}
+    .controls{display:flex;flex-direction:column;gap:8px}
+    button{padding:8px 12px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer}
+    .log{width:360px;max-height:640px;overflow:auto;border:1px solid #ddd;padding:8px;border-radius:6px;background:#fff}
+    label{display:flex;gap:8px;align-items:center}
+  </style>
+</head>
+<body>
+  <div>
+    <h2>Othello — Play</h2>
+    <div class="board" id="board"></div>
+  </div>
+
+  <div class="controls">
+    <label>Human plays as:
+      <select id="humanColor"><option value="x">Black (先手)</option><option value="o">White (後手)</option></select>
+    </label>
+    <label>AI coeff set:
+      <select id="coeffSet">
+        <option value="set1">Coefficients (set1) — 2‑ply trained</option>
+        <option value="set2">Coefficients (set2) — earlier</option>
+      </select>
+    </label>
+    <label>AI search limit
+      <input id="maxDepthOverride" type="number" value="0" min="0" style="width:72px"/> (0 = use phase rule)
+    </label>
+    <button id="newGame">New Game</button>
+    <button id="passBtn">Pass</button>
+    <button id="undoBtn">Undo (1 ply)</button>
+    <div>Turn: <span id="turnLabel">—</span></div>
+    <div>Score: <span id="scoreLabel">—</span></div>
+    <h3>Log</h3>
+    <div class="log" id="log"></div>
+  </div>
+
+<script>
+// --- Game core (JS) implementing the same algorithm you provided ---
+const EMPTY='.';
+const BLACK='x';
+const WHITE='o';
+
+const weight_map = [
+  [4,-3,2,2,2,2,-3,4],
+  [-3,-4,-1,-1,-1,-1,-4,-3],
+  [2,-1,1,0,0,1,-1,2],
+  [2,-1,0,1,1,0,-1,2],
+  [2,-1,0,1,1,0,-1,2],
+  [2,-1,1,0,0,1,-1,2],
+  [-3,-4,-1,-1,-1,-1,-4,-3],
+  [4,-3,2,2,2,2,-3,4]
+];
+const corners = [[0,0],[0,7],[7,0],[7,7]];
+const edges = (() => { let e=[]; for(let i=1;i<=6;i++){ e.push([0,i]); e.push([7,i]); e.push([i,0]); e.push([i,7]); } return e; })();
+
+// Two coefficient sets; primary one matches the vector you gave
+const COEFFS = {
+  set1: [0.0057233, -0.00936272, 0.11035295, -0.05412351, 0.01828208, 0.00469855, 0.02134731, -0.0153564, 0.16447646, 0.01358352, 0.03670371, -0.01065477],
+  set2: [0.03971227, -0.02243063, 0.09989241, -0.0581593, 0.00217824, 0.00492745, 0.00633811, -0.00540931, 0.1580517, -0.00274921, 0.01174741, 0.00376672]
+};
+
+// board as 8x8 array of '.'|'x'|'o'
+function initBoard(){
+  const b = Array.from({length:8},_=>Array(8).fill(EMPTY));
+  b[3][3]=WHITE; b[4][4]=WHITE; b[3][4]=BLACK; b[4][3]=BLACK; return b;
+}
+
+function cloneBoard(b){ return b.map(r=>r.slice()); }
+
+function inside(x,y){ return x>=0 && x<8 && y>=0 && y<8; }
+
+function opponent(p){ return p===BLACK?WHITE:BLACK; }
+
+function flippedPositions(board, player, x, y){
+  if(board[y][x] !== EMPTY) return [];
+  const opp = opponent(player);
+  const dirs = [[1,0],[0,1],[-1,0],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+  let flips = [];
+  for(const [dx,dy] of dirs){
+    let cx = x+dx, cy=y+dy; let temp=[];
+    while(inside(cx,cy) && board[cy][cx]===opp){ temp.push([cx,cy]); cx+=dx; cy+=dy; }
+    if(inside(cx,cy) && board[cy][cx]===player && temp.length>0) flips = flips.concat(temp);
+  }
+  return flips;
+}
+
+function validMoves(board, player){
+  let moves=[];
+  for(let y=0;y<8;y++) for(let x=0;x<8;x++){
+    if(flippedPositions(board, player, x, y).length>0) moves.push([x,y]);
+  }
+  return moves;
+}
+
+function applyMove(board, player, x, y){
+  const flips = flippedPositions(board, player, x, y);
+  if(flips.length===0) throw new Error('invalid move');
+  const nb = cloneBoard(board);
+  nb[y][x]=player;
+  for(const [fx,fy] of flips) nb[fy][fx]=player;
+  return nb;
+}
+
+function countPieces(board, player){ return board.flat().filter(c=>c===player).length; }
+
+function count_diff(board, player){ return countPieces(board, player) - countPieces(board, opponent(player)); }
+
+function count_linear(board, player, lis){
+  const [a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12] = lis;
+  const my_pieces = countPieces(board, player);
+  const all_pieces = countPieces(board, BLACK) + countPieces(board, WHITE);
+  const my_corners = corners.reduce((s,[x,y])=> s + (board[y][x]===player?1:0), 0);
+  const opp_corners = corners.reduce((s,[x,y])=> s + (board[y][x]===opponent(player)?1:0), 0);
+  const my_edges = edges.reduce((s,[x,y])=> s + (board[y][x]===player?1:0), 0);
+  const opp_edges = edges.reduce((s,[x,y])=> s + (board[y][x]===opponent(player)?1:0), 0);
+  const my_moves = validMoves(board, player).length;
+  const opp_moves = validMoves(board, opponent(player)).length;
+  const diff_corners = my_corners - opp_corners;
+  const diff_edges = my_edges - opp_edges;
+  const diff_moves = my_moves - opp_moves;
+  let weighted = 0;
+  for(let y=0;y<8;y++) for(let x=0;x<8;x++){
+    if(board[y][x]===player) weighted += weight_map[y][x];
+    else if(board[y][x]===opponent(player)) weighted -= weight_map[y][x];
+  }
+  return a1*my_pieces + a2*all_pieces + a3*my_corners + a4*opp_corners + a5*my_edges + a6*opp_edges + a7*my_moves + a8*opp_moves + a9*diff_corners + a10*diff_edges + a11*diff_moves + a12*weighted;
+}
+
+// alphabetaEval faithful to your Scala logic. rootPlayer: perspective for evaluation
+function alphabetaEval(rootPlayer, heuristic, depth, gameBoard, currentPlayer, alpha, beta, lis){
+  if(depth===0) return heuristic(gameBoard, rootPlayer, lis);
+  const moves = validMoves(gameBoard, currentPlayer);
+  if(moves.length===0){
+    return alphabetaEval(rootPlayer, heuristic, depth-1, gameBoard, opponent(currentPlayer), alpha, beta, lis);
+  }
+  if(currentPlayer===rootPlayer){
+    let a = alpha;
+    for(const [x,y] of moves){
+      const next = applyMove(gameBoard, currentPlayer, x, y);
+      const score = alphabetaEval(rootPlayer, heuristic, depth-1, next, opponent(currentPlayer), a, beta, lis);
+      a = Math.max(a, score);
+      if(a >= beta) return a; // beta cut
+    }
+    return a;
+  } else {
+    let b = beta;
+    for(const [x,y] of moves){
+      const next = applyMove(gameBoard, currentPlayer, x, y);
+      const score = alphabetaEval(rootPlayer, heuristic, depth-1, next, opponent(currentPlayer), alpha, b, lis);
+      b = Math.min(b, score);
+      if(b <= alpha) return b; // alpha cut
+    }
+    return b;
+  }
+}
+
+function strategy_for_win_div(board, player, lis, maxDepthOverride=0){
+  const pieces = countPieces(board, player) + countPieces(board, opponent(player));
+  const depth = (maxDepthOverride>0) ? maxDepthOverride : (pieces <= 50 ? 7 : 64 - pieces);
+  const moves = validMoves(board, player);
+  if(moves.length===0) return null;
+  let alpha = -1e12, beta=1e12, best=null;
+  for(const [x,y] of moves){
+    const next = applyMove(board, player, x, y);
+    const score = alphabetaEval(player, count_linear, depth-1, next, opponent(player), alpha, beta, lis);
+    if(score > alpha){ alpha = score; best=[x,y]; }
+  }
+  return best;
+}
+
+// --- UI glue ---
+let state = {board: initBoard(), turn: BLACK, history: []};
+const boardEl = document.getElementById('board');
+const logEl = document.getElementById('log');
+const turnLabel = document.getElementById('turnLabel');
+const scoreLabel = document.getElementById('scoreLabel');
+
+function render(){
+  boardEl.innerHTML='';
+  for(let y=0;y<8;y++) for(let x=0;x<8;x++){
+    const el = document.createElement('div'); el.className='cell'; el.dataset.x=x; el.dataset.y=y;
+    const v = state.board[y][x];
+    if(v!==EMPTY){ const d = document.createElement('div'); d.className='disc '+(v===BLACK?'black':'white'); el.appendChild(d); }
+    el.addEventListener('click',()=> onCellClick(x,y));
+    boardEl.appendChild(el);
+  }
+  turnLabel.textContent = state.turn===BLACK? 'Black (x)' : 'White (o)';
+  const b = countPieces(state.board, BLACK), w = countPieces(state.board, WHITE);
+  scoreLabel.textContent = `${b} - ${w}`;
+}
+
+function log(s){ logEl.textContent = s + "\n" + logEl.textContent; }
+
+function onCellClick(x,y){
+  const humanColor = document.getElementById('humanColor').value;
+  if(state.turn !== humanColor) return; // not human's turn
+  const moves = validMoves(state.board, state.turn).map(m=>m.toString());
+  if(!moves.includes([x,y].toString())) return; // illegal
+  pushHistory();
+  state.board = applyMove(state.board, state.turn, x, y);
+  log(`${state.turn} -> (${x},${y})`);
+  state.turn = opponent(state.turn);
+  render();
+  setTimeout(aiIfNeeded, 50);
+}
+
+function pushHistory(){ state.history.push({board: cloneBoard(state.board), turn: state.turn}); if(state.history.length>100) state.history.shift(); }
+
+async function aiIfNeeded(){
+  const humanColor = document.getElementById('humanColor').value;
+  const coeffKey = document.getElementById('coeffSet').value;
+  const lis = COEFFS[coeffKey];
+  const maxDepthOverride = Number(document.getElementById('maxDepthOverride').value)||0;
+
+  if(gameOver(state.board)){ log('Game over'); return; }
+  if(state.turn === humanColor) return;
+
+  // AI move
+  const move = strategy_for_win_div(state.board, state.turn, lis, maxDepthOverride);
+  if(move===null){ log(`${state.turn} passes`); state.turn = opponent(state.turn); render(); return; }
+  pushHistory();
+  state.board = applyMove(state.board, state.turn, move[0], move[1]);
+  log(`AI(${state.turn}) -> (${move[0]},${move[1]})`);
+  state.turn = opponent(state.turn);
+  render();
+}
+
+function gameOver(board){ return validMoves(board, BLACK).length===0 && validMoves(board, WHITE).length===0; }
+
+function pass(){ if(validMoves(state.board, state.turn).length===0){ state.turn = opponent(state.turn); render(); aiIfNeeded(); } else { log('Cannot pass when legal moves exist'); } }
+
+function undo(){ if(state.history.length===0) return; const last = state.history.pop(); state.board = last.board; state.turn = last.turn; render(); }
+
+document.getElementById('newGame').addEventListener('click', ()=>{ state.board = initBoard(); state.turn = BLACK; state.history=[]; render(); if(state.turn!==document.getElementById('humanColor').value) setTimeout(aiIfNeeded,100); });
+document.getElementById('passBtn').addEventListener('click', pass);
+document.getElementById('undoBtn').addEventListener('click', undo);
+
+// start
+render();
+// if human chose to play White, AI should move first
+if(document.getElementById('humanColor').value !== BLACK) setTimeout(aiIfNeeded,100);
+
+</script>
+</body>
+</html>
