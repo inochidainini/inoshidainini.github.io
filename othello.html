@@ -140,7 +140,10 @@ function count_linear(board, player, lis){
 
 // alphabetaEval faithful to your Scala logic. rootPlayer: perspective for evaluation
 function alphabetaEval(rootPlayer, heuristic, depth, gameBoard, currentPlayer, alpha, beta, lis){
-  if(depth===0) return heuristic(gameBoard, rootPlayer, lis);
+  const emptyCount = gameBoard.flat().filter(c => c === EMPTY).length;
+  if (depth === 0 || depth >= emptyCount) {
+    return count_diff(gameBoard, rootPlayer);
+  }
   const moves = validMoves(gameBoard, currentPlayer);
   if(moves.length===0){
     return alphabetaEval(rootPlayer, heuristic, depth-1, gameBoard, opponent(currentPlayer), alpha, beta, lis);
